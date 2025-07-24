@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>I Ching Yorumu</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.min.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+      min-height: 100vh;
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+    .container {
+      max-width: 500px;
+      margin: 50px auto;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      padding: 32px 24px 24px 24px;
+    }
+    h2 {
+      text-align: center;
+      color: #6c47a6;
+      margin-bottom: 32px;
+    }
+    #iching-form button {
+      background: #6c47a6;
+      color: #fff;
+      border-radius: 8px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      margin-top: 10px;
+    }
+    #result {
+      margin-top: 32px;
+    }
+    .result-card {
+      background: #f6f2ff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(108,71,166,0.08);
+      padding: 20px 18px;
+      margin-top: 10px;
+      font-size: 1.08em;
+      line-height: 1.6;
+    }
+    .hexagram-line {
+      font-size: 1.5em;
+      letter-spacing: 0.2em;
+      margin: 2px 0;
+      text-align: center;
+    }
+    .loader {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #6c47a6;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @media (max-width: 600px) {
+      .container { padding: 16px 4px; }
+      h2 { font-size: 1.3em; }
+    }
+  </style>
+</head>
+<body>
+  <div style="text-align:center; margin-top:32px;">
+    <img src="dizilim.avif" alt="I Ching Dizilimi" style="max-width:340px; width:95%; border-radius:12px; box-shadow:0 2px 12px #0002; margin-bottom:12px;">
+    <div style="color:#6c47a6; font-size:1.12em; margin-bottom:18px;">I Ching altı çizgi dizilimi örneği</div>
+    <div style="max-width:600px; margin:0 auto; background:#f7f2ff; border-radius:10px; padding:18px 16px 14px 16px; box-shadow:0 2px 8px #0001; color:#333; font-size:1.08em;">
+      <b>I Ching Falı Nedir?</b><br>
+      I Ching (Değişimler Kitabı), Çin'in en eski klasik metinlerinden biridir ve binlerce yıldır kehanet ve bilgelik kaynağı olarak kullanılmaktadır. I Ching falı, hayatınızdaki bir durumu veya soruyu anlamak için altı çizgiden oluşan bir hexagram (altı çizgili sembol) oluşturur. Her bir hexagram, farklı bir yaşam durumunu ve bu durumla ilgili öğütleri temsil eder.<br><br>
+      Bu uygulama, sorduğunuz soruya göre rastgele bir I Ching hexagramı oluşturur ve Google Gemini yapay zekâsı ile size Türkçe bir yorum sunar. Aşağıda örnek bir dizilim ve uygulamanın kullanımıyla ilgili bilgiler bulabilirsiniz.
+    </div>
+  </div>
+  <div class="container">
+    <h2>🔮 I Ching Yorumu 🔮</h2>
+    <form id="iching-form" autocomplete="off">
+      <label for="question">Sorunuz:</label>
+      <input type="text" id="question" name="question" placeholder="Hayatımda neye odaklanmalıyım?" required autocomplete="off">
+      <div id="hexagram-select" style="margin:18px 0 10px 0;">
+        <div style="font-weight:bold; color:#6c47a6; margin-bottom:8px;">1. Adım: Sorunuzu girin</div>
+        <div style="font-weight:bold; color:#6c47a6; margin-bottom:8px;">2. Adım: Çizgileri Seçin (Alttan Üste)</div>
+        <div id="lines-container">
+          <!-- 6 çizgi için seçim alanları buraya JS ile eklenecek -->
+        </div>
+      </div>
+      <button type="submit" id="submit-btn">Danış</button>
+    </form>
+    <div id="result"></div>
+  </div>
+  <script src="script.js"></script>
+  <script>
+    // Soru girilmeden rastgele butonlarını devre dışı bırak
+    document.addEventListener('DOMContentLoaded', function() {
+      const questionInput = document.getElementById('question');
+      const linesContainer = document.getElementById('lines-container');
+      function toggleRandomButtons() {
+        const randomBtns = linesContainer.querySelectorAll('.random-btn');
+        randomBtns.forEach(btn => {
+          btn.disabled = !questionInput.value.trim();
+        });
+      }
+      questionInput.addEventListener('input', toggleRandomButtons);
+      // İlk yüklemede de kontrol et
+      setTimeout(toggleRandomButtons, 100);
+      // Her çizgi eklendiğinde de kontrol etmesi için mutation observer
+      const observer = new MutationObserver(toggleRandomButtons);
+      observer.observe(linesContainer, { childList: true, subtree: true });
+    });
+  </script>
+</body>
+</html>
